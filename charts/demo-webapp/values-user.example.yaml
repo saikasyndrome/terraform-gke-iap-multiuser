@@ -1,0 +1,24 @@
+podLabels:
+  app: demo-webapp
+  user: user1
+
+volumes:
+  - name: app-data
+    persistentVolumeClaim:
+      claimName: demo-webapp-user1-pvc
+
+pvc:
+  name: demo-webapp-user1-pvc
+  storageClassName: standard-rwo
+  storage: 10Gi
+
+env:
+  - name: AUTH_LOGIN
+    value: "admin"
+  - name: AUTH_PASSWORD
+    value: "CHANGE_ME_PER_USER"
+
+# Optional: point at your real application image
+# image:
+#   repository: your-registry/your-agent
+#   tag: "1.2.3"

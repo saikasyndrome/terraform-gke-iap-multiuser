@@ -1,0 +1,13 @@
+project_id       = "demo-gke-iap"
+region           = "asia-northeast1"
+zone             = "asia-northeast1-a"
+dns_managed_zone = "example-com"
+
+# Create OAuth client in GCP Console (APIs & Services → Credentials)
+iap_oauth_client_id     = "REPLACE_ME.apps.googleusercontent.com"
+iap_oauth_client_secret = "REPLACE_ME"
+
+# Restrict in real use
+# master_authorized_cidrs = [
+#   { cidr_block = "203.0.113.0/24", display_name = "office" }
+# ]

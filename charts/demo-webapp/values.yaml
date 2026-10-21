@@ -1,0 +1,92 @@
+replicaCount: 1
+
+image:
+  # Placeholder for the sample. Reference workload verified with Agent Zero
+  # (https://github.com/agent0ai/agent-zero). Swap repository/tag as needed.
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.27-alpine"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels:
+  app: demo-webapp
+  # Must match the user key in terraform/users.tf
+  user: user1
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+
+volumes:
+  - name: app-data
+    persistentVolumeClaim:
+      claimName: demo-webapp-user1-pvc
+
+volumeMounts:
+  - name: app-data
+    mountPath: /data
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  - name: AUTH_LOGIN
+    value: "admin"
+  - name: AUTH_PASSWORD
+    value: "CHANGE_ME"
+
+pvc:
+  name: demo-webapp-user1-pvc
+  storageClassName: standard-rwo
+  storage: 10Gi
